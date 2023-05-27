@@ -14,7 +14,8 @@ class CreatePostForm(FlaskForm):
 
 class UserRegisterForm(FlaskForm):
     name = StringField(render_kw={"placeholder": "Name"}, validators=[DataRequired()])
-    email = StringField(render_kw={"placeholder": "Email"}, validators=[DataRequired()])
+    email = StringField(render_kw={"placeholder": "Email"},
+                       validators=[DataRequired(), Email(message='Invalid email address')])
     password = PasswordField(render_kw={"placeholder": "Password"}, validators=[DataRequired(), Length(min=8)])
     submit = SubmitField(label='Sign me up!')
 
