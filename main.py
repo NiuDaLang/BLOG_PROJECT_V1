@@ -19,7 +19,7 @@ MY_EMAIL_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')
 
 app = Flask(__name__)
 app.app_context().push()
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
@@ -261,4 +261,4 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
