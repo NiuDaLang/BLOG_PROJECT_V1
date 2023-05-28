@@ -11,15 +11,13 @@ from flask_gravatar import Gravatar
 from functools import wraps
 import smtplib
 import os
-from dotenv import load_dotenv
 
-load_dotenv("/.env")
-MY_EMAIL = os.getenv('MY_EMAIL')
-MY_EMAIL_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')
+MY_EMAIL = os.environ['MY_EMAIL']
+MY_EMAIL_PASSWORD = os.environ['MY_EMAIL_PASSWORD']
 
 app = Flask(__name__)
 app.app_context().push()
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
@@ -45,6 +43,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
+    # children = relationship("BlogPost", back_populates="parent")
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="commenter")
 
@@ -160,6 +159,7 @@ def logout():
 def show_post(post_id):
     requested_post = BlogPost.query.get(post_id)
 
+
     comment_form = CommentForm()
     if comment_form.validate_on_submit():
         if current_user.is_anonymous:
@@ -173,6 +173,7 @@ def show_post(post_id):
             )
             db.session.add(new_comment)
             db.session.commit()
+            return redirect(url_for('show_post', post_id=post_id))
 
     return render_template("post.html", post=requested_post, form=comment_form)
 
@@ -185,7 +186,7 @@ def about():
 @app.route("/contact", methods=["POST", "GET"])
 def contact():
     if request.method == 'GET':
-        h1_message = "Contact Me"
+        h1_message="Contact Me"
         return render_template("contact.html", h1=h1_message)
     elif request.method == 'POST':
         name = request.form['name']
@@ -193,7 +194,7 @@ def contact():
         phone = request.form['phone']
         message = request.form['message']
         print(f"{name}\n{email}\n{phone}\n{message}")
-        h1_message = "Successfully sent your message."
+        h1_message="Successfully sent your message."
 
         my_email = MY_EMAIL
         password = MY_EMAIL_PASSWORD
