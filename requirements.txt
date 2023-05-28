@@ -1,4 +1,5 @@
 gunicorn==20.1.0
+psycopg2-binary==2.9.6
 Flask==1.1.2
 Flask-Bootstrap==3.3.7.1
 Flask-CKEditor==0.4.4.1
